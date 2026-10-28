@@ -13,7 +13,7 @@
 name: update-flake-hashes
 # Keep this repo's flakes pointing at the CURRENT cloud-u-linux artifacts.
 #
-# 2026-08-27: the my-webserver / my-ai apps moved to diegonmarcos/cloud-u-linux
+# 2026-08-27: the my-webserver / my-ai apps moved to diegonmarcos/cloudy-u-linux
 # in the d* split, so their ship-* workflows run there and can no longer write
 # this repo's files -- GITHUB_TOKEN is scoped to a single repo and cannot push
 # cross-repo. Rather than mint a cross-repo PAT, the dependency is inverted:
@@ -59,7 +59,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  SOURCE_REPO: diegonmarcos/cloud-u-linux
+  SOURCE_REPO: diegonmarcos/cloudy-u-linux
 
 jobs:
   update:
@@ -96,7 +96,7 @@ jobs:
               . as $l
               | $l.nodes[$l.root].inputs
               | to_entries[]
-              | select($l.nodes[.value].original.repo == "cloud-u-linux")
+              | select($l.nodes[.value].original.repo | (. == "cloudy-u-linux" or . == "cloud-u-linux"))
               | select(($l.nodes[.value].original.dir // "") != "")
               | .key' "$lock")"
             [ -n "$inputs" ] || continue

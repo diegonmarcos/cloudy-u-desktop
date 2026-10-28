@@ -412,7 +412,7 @@ case "$CMD" in
     # with no builder container, no mesh and no SSH in the path at all.
     echo "FATAL: the 'ship-reports' verb is retired." >&2
     echo "  Build the reports image with cloud-infra's ship-reports.yml:" >&2
-    echo "    gh workflow run ship-reports.yml -R diegonmarcos/cloud-t-infra" >&2
+    echo "    gh workflow run ship-reports.yml -R diegonmarcos/cloudy-t-infra" >&2
     exit 1
     ;;
   bash|sh)

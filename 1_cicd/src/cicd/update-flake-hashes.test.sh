@@ -110,7 +110,7 @@ for name, key in nodes[root].get("inputs", {}).items():
     if isinstance(key, list):
         continue
     orig = nodes.get(key, {}).get("original", {})
-    if orig.get("repo") == "cloud-u-linux" and orig.get("dir"):
+    if orig.get("repo") in ("cloudy-u-linux", "cloud-u-linux") and orig.get("dir"):
         print(f"{flake}\t{name}")
 PY
 done | sort > "$SANDBOX/expected"
