@@ -11,14 +11,14 @@ pass() { echo "  ✓ $1"; }
 echo "=== unix framework conformance ==="
 
 # 1. .git/config contains [include] pointing to dist/gitconfig
-git config --local --get include.path 2>/dev/null | grep -q '0_git/dist/gitconfig' \
-    || fail ".git/config missing [include] for 0_git/dist/gitconfig"
+git config --local --get include.path 2>/dev/null | grep -q '_dotfiles/git/dist/gitconfig' \
+    || fail ".git/config missing [include] for _dotfiles/git/dist/gitconfig"
 pass ".git/config [include] wired"
 
-# 2. hooksPath resolves to 0_git/dist/hooks
-[ "$(git config core.hooksPath)" = "0_git/dist/hooks" ] \
-    || fail "core.hooksPath != 0_git/dist/hooks (got: $(git config core.hooksPath))"
-pass "hooksPath = 0_git/dist/hooks"
+# 2. hooksPath resolves to _dotfiles/git/dist/hooks
+[ "$(git config core.hooksPath)" = "_dotfiles/git/dist/hooks" ] \
+    || fail "core.hooksPath != _dotfiles/git/dist/hooks (got: $(git config core.hooksPath))"
+pass "hooksPath = _dotfiles/git/dist/hooks"
 
 # 3. alias.sync is defined
 git config alias.sync | grep -q 'cloud-git-sync.sh' \
@@ -26,7 +26,7 @@ git config alias.sync | grep -q 'cloud-git-sync.sh' \
 pass "alias.sync defined"
 
 # 4. pre-commit hook exists + executable
-[ -x "0_git/dist/hooks/pre-commit" ] \
+[ -x "_dotfiles/git/dist/hooks/pre-commit" ] \
     || fail "dist/hooks/pre-commit missing or not executable"
 pass "pre-commit hook deployed + executable"
 
@@ -40,7 +40,7 @@ git ls-files .gitconfig 2>/dev/null | grep -q '^.gitconfig$' \
 pass "no stale .gitconfig tracked at root"
 
 # 7. pre-commit is data-driven for submodules (no hardcoded names)
-grep -q "git config --file .gitmodules" "0_git/dist/hooks/pre-commit" \
+grep -q "git config --file .gitmodules" "_dotfiles/git/dist/hooks/pre-commit" \
     || fail "pre-commit not data-driven for submodules"
 pass "pre-commit data-driven for submodules"
 

@@ -3,7 +3,7 @@
 # ║ cloud-git-sync.sh — smart, verbose, non-destructive `git sync`   ║
 # ║                                                                  ║
 # ║ Source: cloud/1_cicd/src/scripts/cloud-git-sync.sh          ║
-# ║ Wired : 0_git/src/gitconfig  →  [alias] sync               ║
+# ║ Wired : _dotfiles/git/src/gitconfig  →  [alias] sync               ║
 # ║                                                                  ║
 # ║ Usage:                                                           ║
 # ║   git sync              # default: LOCAL wins on conflict        ║

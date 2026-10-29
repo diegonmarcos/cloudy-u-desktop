@@ -87,7 +87,7 @@ aa_cloud-ide/                        ← NEW top-level project (sibling of aa_cl
 
 **Declarative fork rule (non-negotiable, same as Comms)**: a fork is *never* a long-lived divergent clone. It is `pinned upstream tag + committed patch series`, materialized by the engine at build time into gitignored working clones under `aa_upstreams-sources/` (`ide-acode/`, `files-amaze/`, `files-amaze-utils/`). Same input → same APK. Upstream bump = edit `pinned_tag`, re-apply patches, fix rejects, commit.
 
-**Gitignore change required** (`~/git/cloud-infra-desktop/0_git/src/gitignore`, source of `.gitignore`): add `!aa_cloud-ide/` + `!aa_cloud-ide/**` exceptions following the documented `aa_cloud-superapp` precedent (lines 71–76) — **Phase 0, first commit**, or all work is silently untracked.
+**Gitignore change required** (`~/git/cloud-infra-desktop/_dotfiles/git/src/gitignore`, source of `.gitignore`): add `!aa_cloud-ide/` + `!aa_cloud-ide/**` exceptions following the documented `aa_cloud-superapp` precedent (lines 71–76) — **Phase 0, first commit**, or all work is silently untracked.
 
 **Signing**: the SAME key as SuperApp + Cloud-Comms (one signature-permission family across both constellations). Key material in `~/git/cloud-vault/A0_keys/providers/system/` (vault carve-out); CI consumption via sops `src/secrets.yaml` in `aa_cloud-ide/`. If Cloud-Comms Phase 0 already generated this key, REUSE it — do not mint a second one.
 

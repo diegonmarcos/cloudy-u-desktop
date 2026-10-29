@@ -2,7 +2,7 @@
 # ║                                                                  ║
 # ║   GENERATED FILE — DO NOT EDIT                                   ║
 # ║                                                                  ║
-# ║   Source : 0_git/src/gitignore
+# ║   Source : _dotfiles/git/src/gitignore
 # ║   Engine : 1_cicd/src/scripts/unix-ship-repo-workflow-engine.sh
 # ║   Rebuild: ./9_others/build.sh
 # ║                                                                  ║
@@ -17,7 +17,7 @@
 
 # ── Secrets & Credentials (reinforces global gitignore) ──
 # KEEP IN SYNC WITH:
-#   Pre-commit hook: 0_git/src/hooks/pre-commit  (blocks even git add -f)
+#   Pre-commit hook: _dotfiles/git/src/hooks/pre-commit  (blocks even git add -f)
 #   Global gitignore: ~/git/cloud-infra-desktop/ba_flakes_desktop/src/modules/programs/git.nix
 #   Global gitignore: ~/git/cloud-infra-desktop/bb_flakes_termux/src/modules/programs/git.nix
 ## Decrypted secrets output
@@ -215,7 +215,7 @@ build.log
 ## as untracked forever. Ignoring them keeps `git status` honest without
 ## deleting anything. Nothing in unix reads through these paths at runtime.
 ##
-## Do NOT re-add these to 0_git/src/gitmodules — the ship engine
+## Do NOT re-add these to _dotfiles/git/src/gitmodules — the ship engine
 ## reconciles from that file and would resurrect them as submodules.
 /I_cloud-data/
 /II_tools/
@@ -256,7 +256,7 @@ af_waydroid-container/src/data-seed.tar.zst
 ## no .gitmodules mapping. `git submodule status` then dies with "no submodule
 ## mapping found for path 'I_cloud'", which blocks rebase and breaks CI checkout.
 ## The dir stays on disk; whether `cloud` or `I_cloud` is the canonical name is
-## a separate decision, and belongs in 0_git/src/gitmodules when it is made.
+## a separate decision, and belongs in _dotfiles/git/src/gitmodules when it is made.
 I_cloud/
 
 # dtk/ is the cloud-mykonsole-dtk repo merged in whole (2026-08-27). It

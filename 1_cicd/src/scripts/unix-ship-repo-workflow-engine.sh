@@ -20,8 +20,8 @@ REPO_ROOT="${UNIX_ROOT:-$(_d="$(cd "$(dirname "$0")" && pwd)"; while [ "$_d" != 
 
 # Config tiers. Each owns its own dist/, so a source and its compiled form sit
 # together instead of every artifact landing in one flat 1_configs/dist.
-GIT_SRC="$REPO_ROOT/0_git/src";     GIT_DIST="$REPO_ROOT/0_git/dist"
-APPS_SRC="$REPO_ROOT/0_apps/src";   APPS_DIST="$REPO_ROOT/0_apps/dist"
+GIT_SRC="$REPO_ROOT/_dotfiles/git/src";     GIT_DIST="$REPO_ROOT/_dotfiles/git/dist"
+APPS_SRC="$REPO_ROOT/_dotfiles/apps/src";   APPS_DIST="$REPO_ROOT/_dotfiles/apps/dist"
 CICD_SRC="$REPO_ROOT/1_cicd/src";   CICD_DIST="$REPO_ROOT/1_cicd/dist"
 LIB_SRC="$REPO_ROOT/9_others/src";  LIB_DIST="$REPO_ROOT/9_others/dist"
 TARGET_DIR="$REPO_ROOT/.github/workflows"
@@ -197,7 +197,7 @@ do_deploy() {
     done
 
     # LICENSE is a git-tier file like the rest, so it is generated from
-    # 0_git/src rather than hand-edited at the root.
+    # _dotfiles/git/src rather than hand-edited at the root.
     if [ -f "$GIT_DIST/LICENSE" ]; then
         cp -f "$GIT_DIST/LICENSE" "$REPO_ROOT/LICENSE"
         log "Deployed LICENSE → repo root"
@@ -305,7 +305,7 @@ do_deploy() {
             esac
         done < "$GIT_DIST/gitconfig"
         unset _gc_section _gc_key
-        git -C "$REPO_ROOT" config --local include.path ../0_git/dist/gitconfig 2>/dev/null || true
+        git -C "$REPO_ROOT" config --local include.path ../_dotfiles/git/dist/gitconfig 2>/dev/null || true
         log "Deployed gitconfig (included in .git/config)"
     fi
 
@@ -318,7 +318,7 @@ do_deploy() {
 # Never purge-then-copy: .claude/ and .obsidian/ mix managed config with
 # per-machine state (pane layout, local overrides).
 do_dotfiles() {
-    [ -d "$APPS_SRC" ] || { log "no 0_apps/src — skipping dotfiles"; return 0; }
+    [ -d "$APPS_SRC" ] || { log "no _dotfiles/apps/src — skipping dotfiles"; return 0; }
     sh "$LIB_SRC/deploy-dotfiles.sh" "$APPS_SRC" "$APPS_DIST/dotfiles" "$REPO_ROOT"
 }
 
