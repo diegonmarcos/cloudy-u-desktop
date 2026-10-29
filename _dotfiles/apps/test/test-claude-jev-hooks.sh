@@ -6,7 +6,7 @@
 #  - the three committed copies (src SoT, dist, project .claude) are identical.
 # Run: bash _dotfiles/apps/test/test-claude-jev-hooks.sh
 set -u
-ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+ROOT="$(cd "$(dirname "$0")/../../.." && pwd)"
 S="$ROOT/_dotfiles/apps/src/claude/settings.json"
 fail=0
 check() { if [ "$2" != "$3" ]; then echo "FAIL $1: got '$2' want '$3'"; fail=1; fi; }
