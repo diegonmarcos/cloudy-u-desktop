@@ -13,8 +13,8 @@ check() { if [ "$2" != "$3" ]; then echo "FAIL $1: got '$2' want '$3'"; fail=1; 
 q() { python3 -c 'import json,sys; d=json.load(open(sys.argv[1])); print(eval(sys.argv[2], {"d": d}))' "$S" "$1"; }
 
 check "PermissionRequest matcher" "$(q 'd["hooks"]["PermissionRequest"][0]["matcher"]')" "Bash|Edit|Write"
-check "only the two events" "$(q 'sorted(d["hooks"])')" "['PermissionRequest', 'UserPromptSubmit']"
-check "no deny rule added" "$(q 'd["permissions"]["deny"]')" "[]"
+check "jev events present beside the c3 guards" "$(q 'sorted(set(d["hooks"]) & {"PermissionRequest","UserPromptSubmit"})')" "['PermissionRequest', 'UserPromptSubmit']"
+check "gate matcher tools (Bash/Edit/Write) are not denied" "$(q '[t for t in d["permissions"]["deny"] if t.split("(")[0] in ("Bash","Edit","Write")]')" "[]"
 for ev in PermissionRequest UserPromptSubmit; do
   cmd="$(q "d['hooks']['$ev'][0]['hooks'][0]['command']")"
   case "$cmd" in *"exec jev-gate claude") ;; *) echo "FAIL $ev command is not 'jev-gate claude': $cmd"; fail=1 ;; esac
