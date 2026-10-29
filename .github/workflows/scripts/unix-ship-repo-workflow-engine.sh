@@ -51,25 +51,27 @@ export ENGINE_NAME="1_cicd/src/scripts/unix-ship-repo-workflow-engine.sh"
 log() { printf "[%s] %s\n" "$(date '+%H:%M:%S')" "$1"; }
 
 do_build() {
-    # Clean dist/ first so deletions in src/ propagate (otherwise orphaned
+    # Find workflow sources BEFORE touching dist/: a glob that matches nothing
+    # is silent in sh (deploy then copies zero files while the old .github/
+    # copies look healthy; cloud rendered 0 workflows for a week, 2026-08-10),
+    # and `ls *.yml *.yaml` fails when only ONE of the two extensions exists.
+    # So: find(1), fail loudly, and wipe nothing if there is nothing to build.
+    _wf_srcs="$(find "$CICD_SRC/cicd" -maxdepth 1 -type f \( -name '*.yml' -o -name '*.yaml' \) 2>/dev/null | sort)"
+    if [ -z "$_wf_srcs" ]; then
+        echo "FATAL: no workflows found at $CICD_SRC/cicd/*.{yml,yaml}" >&2
+        exit 1
+    fi
+
+    # Clean dist/ (only now) so deletions in src/ propagate (otherwise orphaned
     # scripts/hooks linger forever, including broken symlinks).
     rm -rf "$CICD_DIST" "$GIT_DIST" "$LIB_DIST"
     mkdir -p "$CICD_DIST" "$CICD_DIST/scripts" "$GIT_DIST/hooks" "$LIB_DIST/test"
 
     # Static workflows (src/cicd/*.yml + *.yaml → dist/)
-    # A glob that matches nothing is silent in sh: the loop never runs, deploy
-    # copies zero files, and the already-deployed .github/ copies sit there
-    # looking healthy. That is exactly how cloud rendered 0 workflows for a
-    # week after its cicd/ moved (2026-08-10). Fail loudly instead.
-    if ! ls "$CICD_SRC"/cicd/*.yml "$CICD_SRC"/cicd/*.yaml >/dev/null 2>&1; then
-        echo "FATAL: no workflows found at $CICD_SRC/cicd/*.{yml,yaml}" >&2
-        exit 1
-    fi
-    for f in "$CICD_SRC"/cicd/*.yml "$CICD_SRC"/cicd/*.yaml; do
-        [ -f "$f" ] || continue
+    for f in $_wf_srcs; do
         inject_header "$f" "$CICD_DIST/$(basename "$f")"
     done
-    log "Built $(ls "$CICD_DIST"/*.yml "$CICD_DIST"/*.yaml 2>/dev/null | wc -l) workflow(s)"
+    log "Built $(find "$CICD_DIST" -maxdepth 1 -type f \( -name '*.yml' -o -name '*.yaml' \) | wc -l) workflow(s)"
 
     # Scripts (src/scripts/ → dist/scripts/)
     if [ -d "$CICD_SRC/scripts" ]; then
@@ -155,7 +157,7 @@ do_deploy() {
         [ -f "$f" ] || continue
         cp "$f" "$TARGET_DIR/"
     done
-    log "Deployed $(ls "$CICD_DIST"/*.yml "$CICD_DIST"/*.yaml 2>/dev/null | wc -l) workflow(s) → .github/workflows/"
+    log "Deployed $(find "$CICD_DIST" -maxdepth 1 -type f \( -name '*.yml' -o -name '*.yaml' \) | wc -l) workflow(s) → .github/workflows/"
 
     # Remove workflows whose source is gone. Deploy was copy-only, so a
     # workflow deleted from src/ stayed in .github/ forever — and GitHub keeps

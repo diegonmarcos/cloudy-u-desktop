@@ -1,0 +1,38 @@
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║                                                                  ║
+# ║   GENERATED FILE — DO NOT EDIT                                   ║
+# ║                                                                  ║
+# ║   Source : 1_cicd/src/cicd/jev-hooks-tests.yml
+# ║   Engine : 1_cicd/src/scripts/unix-ship-repo-workflow-engine.sh
+# ║   Rebuild: ./9_others/build.sh
+# ║                                                                  ║
+# ║   Manual edits will be overwritten on next build.                ║
+# ║                                                                  ║
+# ╚══════════════════════════════════════════════════════════════════╝
+
+name: Jev hooks testers (advisory, no opinion = today)
+
+# #883 D1/D2: the desktop Claude settings register the Jev gate, and the git commit-msg hook is advisory. These two
+# static testers hold both to "no gate / no opinion changes nothing, and nothing can deny".
+on:
+  push:
+    branches: [main]
+    paths:
+      - "_dotfiles/apps/src/claude/settings.json"
+      - "_dotfiles/apps/test/test-claude-jev-hooks.sh"
+      - "_dotfiles/git/src/hooks/commit-msg"
+      - "_dotfiles/git/test/test-commit-msg.sh"
+      - ".github/workflows/jev-hooks-tests.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: jev-hooks-tests
+  cancel-in-progress: true
+
+jobs:
+  jev-hooks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: bash _dotfiles/apps/test/test-claude-jev-hooks.sh
+      - run: bash _dotfiles/git/test/test-commit-msg.sh
