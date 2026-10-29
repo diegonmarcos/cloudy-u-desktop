@@ -5,6 +5,7 @@
   "label": "cloudy-u-desktop",
   "code": "1.1.4.1",
   "kind": "repo",
+  "variant": "repo",
   "description": "penguins does have wings, but those are divers and swimmers!",
   "visibility": "public",
   "url": "https://github.com/diegonmarcos/cloudy-u-desktop",
