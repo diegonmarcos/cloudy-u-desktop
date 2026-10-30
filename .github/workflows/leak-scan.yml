@@ -2,8 +2,8 @@
 # ║                                                                  ║
 # ║   GENERATED FILE — DO NOT EDIT                                   ║
 # ║                                                                  ║
-# ║   Source : 1_cicd/src/cicd/leak-scan.yml
-# ║   Engine : 1_cicd/src/scripts/unix-ship-repo-workflow-engine.sh
+# ║   Source : _dotfiles/apps/src/github/workflows/leak-scan.yml
+# ║   Engine : 9_others/src/deploy-dotfiles.sh
 # ║   Rebuild: ./9_others/build.sh
 # ║                                                                  ║
 # ║   Manual edits will be overwritten on next build.                ║
